@@ -1,18 +1,18 @@
-import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
-import { map, switchMap } from "rxjs/operators";
-import { Observable } from "rxjs/Observable";
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { map, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
-import { MovieService } from "../movie.service";
-import { MovieDetails, Movie } from "../movie.model";
+import { MovieService } from '../movie.service';
+import { MovieDetail, Movie } from '../movie.model';
 
 @Component({
-  selector: "app-movie-detail",
-  templateUrl: "./movie-detail.component.html",
-  styleUrls: ["./movie-detail.component.css"]
+  selector: 'app-movie-detail',
+  templateUrl: './movie-detail.component.html',
+  styleUrls: ['./movie-detail.component.css'],
 })
 export class MovieDetailComponent implements OnInit {
-  movieDetils$: Observable<MovieDetails>;
+  movieDetils$: Observable<MovieDetail>;
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -21,9 +21,9 @@ export class MovieDetailComponent implements OnInit {
 
   ngOnInit() {
     this.movieDetils$ = this.route.queryParams.pipe(
-      map(queryParams => queryParams["movieId"]),
-      switchMap(imdbId => this.movieService.getMovieDetails(imdbId)),
-      switchMap((movie: MovieDetails) =>
+      map((queryParams) => queryParams['movieId']),
+      switchMap((imdbId) => this.movieService.getMovieDetails(imdbId)),
+      switchMap((movie: MovieDetail) =>
         this.movieService.searchMovie(movie.Title).pipe(
           map((similarMovies: Array<Movie>) =>
             similarMovies.filter(
@@ -32,7 +32,7 @@ export class MovieDetailComponent implements OnInit {
           ),
           map((similarMovies: Array<Movie>) => ({
             ...movie,
-            similarMovies
+            similarMovies,
           }))
         )
       )
